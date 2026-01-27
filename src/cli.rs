@@ -117,7 +117,9 @@ fn delete_todo(args: &Vec<String>) {
 }
 
 fn print_help() {
-    println!("Commands:");
+    println!("commands:");
     println!("  add \"todo text\"");
     println!("  list");
+    println!("  done <id>");
+    println!("  delete <id>");
 }
