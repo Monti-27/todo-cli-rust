@@ -74,6 +74,17 @@ fn mark_done(args: &Vec<String>) {
             return;
         }
     };
+
+    let mut todos = storage::load();
+
+    // find the todo and mark it done
+    if let Some(todo) = todos.iter_mut().find(|t| t.id == id) {
+        todo.mark_done();
+        storage::save(&todos);
+        println!("marked #{id} as done");
+    } else {
+        println!("todo #{id} not found");
+    }
 }
 
 fn print_help() {
