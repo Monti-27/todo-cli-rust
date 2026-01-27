@@ -17,6 +17,7 @@ pub fn run() {
         "add" => add_todo(&args),
         "done" => mark_done(&args),
         "delete" => delete_todo(&args),
+        "clear" => clear_todos(),
         _ => {
             println!("Unknown command: {cmd}");
             print_help();
@@ -116,10 +117,16 @@ fn delete_todo(args: &Vec<String>) {
     }
 }
 
+fn clear_todos() {
+    storage::save(&vec![]);
+    println!("all todos cleared");
+}
+
 fn print_help() {
     println!("commands:");
     println!("  add \"todo text\"");
     println!("  list");
     println!("  done <id>");
     println!("  delete <id>");
+    println!("  clear");
 }
