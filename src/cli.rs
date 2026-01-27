@@ -16,6 +16,7 @@ pub fn run() {
         "list" => list_todos(),
         "add" => add_todo(&args),
         "done" => mark_done(&args),
+        "delete" => delete_todo(&args),
         _ => {
             println!("Unknown command: {cmd}");
             print_help();
@@ -82,6 +83,34 @@ fn mark_done(args: &Vec<String>) {
         todo.mark_done();
         storage::save(&todos);
         println!("marked #{id} as done");
+    } else {
+        println!("todo #{id} not found");
+    }
+}
+
+fn delete_todo(args: &Vec<String>) {
+    if args.len() < 3 {
+        println!("usage: delete <id>");
+        return;
+    }
+
+    let id: u32 = match args[2].parse() {
+        Ok(n) => n,
+        Err(_) => {
+            println!("invalid id");
+            return;
+        }
+    };
+
+    let mut todos = storage::load();
+    let original_len = todos.len();
+
+    // keep only todos that dont match the id
+    todos.retain(|t| t.id != id);
+
+    if todos.len() < original_len {
+        storage::save(&todos);
+        println!("deleted #{id}");
     } else {
         println!("todo #{id} not found");
     }
