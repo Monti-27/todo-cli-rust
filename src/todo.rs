@@ -13,4 +13,8 @@ impl Todo {
     pub fn new(id: u32, text: String, done: bool) -> Self {
         Self { id, text, done : false }
     }
+    // mark a todo as completed
+    pub fn mark_done(&mut self) {
+        self.done = true;
+    }
 }

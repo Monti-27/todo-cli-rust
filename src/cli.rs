@@ -15,6 +15,7 @@ pub fn run() {
     match cmd {
         "list" => list_todos(),
         "add" => add_todo(&args),
+        "done" => mark_done(&args),
         _ => {
             println!("Unknown command: {cmd}");
             print_help();
@@ -58,6 +59,10 @@ fn add_todo(args: &Vec<String>) {
 fn next_id(todos: &Vec<Todo>) -> u32 {
     // find max id and add 1
     todos.iter().map(|t| t.id).max().unwrap_or(0) + 1
+}
+
+fn mark_done(args: &Vec<String>) {
+    // will mark a todo as completed
 }
 
 fn print_help() {
