@@ -62,7 +62,18 @@ fn next_id(todos: &Vec<Todo>) -> u32 {
 }
 
 fn mark_done(args: &Vec<String>) {
-    // will mark a todo as completed
+    if args.len() < 3 {
+        println!("usage: done <id>");
+        return;
+    }
+
+    let id: u32 = match args[2].parse() {
+        Ok(n) => n,
+        Err(_) => {
+            println!("invalid id");
+            return;
+        }
+    };
 }
 
 fn print_help() {
