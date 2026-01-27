@@ -1,6 +1,6 @@
 use std::env;
 
-use crate::storage;
+use crate::{storage, todo::Todo};
 
 pub fn run() {
     let args: Vec<String> = env::args().collect();
@@ -14,7 +14,7 @@ pub fn run() {
 
     match cmd {
         "list" => list_todos(),
-        "add" => println!("Adding todo... (next commit)"),
+        "add" => add_todo(&args),
         _ => {
             println!("Unknown command: {cmd}");
             print_help();
@@ -23,7 +23,6 @@ pub fn run() {
 }
 
 fn list_todos() {
-    // load todos from file
     let todos = storage::load();
 
     if todos.is_empty() {
@@ -35,6 +34,30 @@ fn list_todos() {
         let status = if t.done { "done" } else { "not done" };
         println!("[{status}] #{} - {}", t.id, t.text);
     }
+}
+
+fn add_todo(args: &Vec<String>) {
+    // ex: cargo run -- add "learn rust"
+    if args.len() < 3 {
+        println!("Usage: add \"todo text\"");
+        return;
+    }
+
+    let text = args[2..].join(" "); // allows spaces without breaking
+
+    let mut todos = storage::load();
+    let id = next_id(&todos);
+
+    todos.push(Todo::new(id, text, false));
+
+    storage::save(&todos);
+
+    println!("Added todo #{id}");
+}
+
+fn next_id(todos: &Vec<Todo>) -> u32 {
+    // find max id and add 1
+    todos.iter().map(|t| t.id).max().unwrap_or(0) + 1
 }
 
 fn print_help() {
