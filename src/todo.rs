@@ -1,5 +1,7 @@
 // a single todo item in the memory
+use serde::{Deserialize, Serialize};
 
+#[derive(Debug, Serialize, Deserialize)] //a single todo in memory plus in json file 
 pub struct Todo {
     pub id: u32,
     pub text: String,
