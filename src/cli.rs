@@ -19,6 +19,7 @@ pub fn run() {
         "delete" => delete_todo(&args),
         "clear" => clear_todos(),
         "edit" => edit_todo(&args),
+        "undone" => mark_undone(&args),
         _ => {
             println!("Unknown command: {cmd}");
             print_help();
@@ -90,6 +91,31 @@ fn mark_done(args: &Vec<String>) {
     }
 }
 
+fn mark_undone(args: &Vec<String>) {
+    if args.len() < 3 {
+        println!("usage: undone <id>");
+        return;
+    }
+
+    let id: u32 = match args[2].parse() {
+        Ok(n) => n,
+        Err(_) => {
+            println!("invalid id");
+            return;
+        }
+    };
+
+    let mut todos = storage::load();
+
+    if let Some(todo) = todos.iter_mut().find(|t| t.id == id) {
+        todo.mark_undone();
+        storage::save(&todos);
+        println!("marked #{id} as not done");
+    } else {
+        println!("todo #{id} not found");
+    }
+}
+
 fn delete_todo(args: &Vec<String>) {
     if args.len() < 3 {
         println!("usage: delete <id>");
@@ -155,6 +181,7 @@ fn print_help() {
     println!("  add \"todo text\"");
     println!("  list");
     println!("  done <id>");
+    println!("  undone <id>");
     println!("  delete <id>");
     println!("  edit <id> \"new text\"");
     println!("  clear");

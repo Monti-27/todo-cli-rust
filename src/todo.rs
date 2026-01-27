@@ -17,4 +17,9 @@ impl Todo {
     pub fn mark_done(&mut self) {
         self.done = true;
     }
+
+    // mark a todo as not done
+    pub fn mark_undone(&mut self) {
+        self.done = false;
+    }
 }
