@@ -18,6 +18,7 @@ pub fn run() {
         "done" => mark_done(&args),
         "delete" => delete_todo(&args),
         "clear" => clear_todos(),
+        "edit" => edit_todo(&args),
         _ => {
             println!("Unknown command: {cmd}");
             print_help();
@@ -117,6 +118,33 @@ fn delete_todo(args: &Vec<String>) {
     }
 }
 
+fn edit_todo(args: &Vec<String>) {
+    if args.len() < 4 {
+        println!("usage: edit <id> \"new text\"");
+        return;
+    }
+
+    let id: u32 = match args[2].parse() {
+        Ok(n) => n,
+        Err(_) => {
+            println!("invalid id");
+            return;
+        }
+    };
+
+    let new_text = args[3..].join(" ");
+    let mut todos = storage::load();
+
+    // find the todo and update its text
+    if let Some(todo) = todos.iter_mut().find(|t| t.id == id) {
+        todo.text = new_text;
+        storage::save(&todos);
+        println!("updated #{id}");
+    } else {
+        println!("todo #{id} not found");
+    }
+}
+
 fn clear_todos() {
     storage::save(&vec![]);
     println!("all todos cleared");
@@ -128,5 +156,6 @@ fn print_help() {
     println!("  list");
     println!("  done <id>");
     println!("  delete <id>");
+    println!("  edit <id> \"new text\"");
     println!("  clear");
 }
