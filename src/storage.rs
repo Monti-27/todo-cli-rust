@@ -13,3 +13,11 @@ pub fn load() -> Vec<Todo> {
         Err(_) => vec![],
     }
 }
+
+pub fn save(todos: &Vec<Todo>) {
+    // converting todos into pretty JSON
+    let json = serde_json::to_string_pretty(todos).expect("Failed to serialize todos");
+
+    // writing the JSON into file
+    fs::write(FILE_PATH, json).expect("Failed to save todos");
+}
